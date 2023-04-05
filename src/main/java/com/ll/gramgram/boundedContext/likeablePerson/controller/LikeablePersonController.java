@@ -66,17 +66,17 @@ public class LikeablePersonController {
         return "usr/likeablePerson/list";
     }
 
-//    @PreAuthorize("isAuthenticated()") // 정상작동하지만 service를 도입하고싶다.
-//    @Transactional
-//    @GetMapping("/delete/{id}")
-//    public String LikeDelete(@PathVariable("id") Integer id) {
-//        Optional<LikeablePerson> likeablePerson = likeablePersonRepository.findById(id);
-//        if(likeablePerson.isPresent())
-//        {
-//            LikeablePerson q = likeablePerson.get();
-//            likeablePersonService.delete(q);
-//        }
-//
-//        return rq.redirectWithMsg("/likeablePerson/list", "삭제가 완료되었습니다.");
-//    }
+    @PreAuthorize("isAuthenticated()") // 정상작동하지만 service를 도입하고싶다.
+    @Transactional
+    @GetMapping("/delete/{id}")
+    public String LikeDelete(@PathVariable("id") Integer id) {
+        Optional<LikeablePerson> likeablePerson = likeablePersonRepository.findById(id);
+        if(likeablePerson.isPresent())
+        {
+            LikeablePerson q = likeablePerson.get();
+            likeablePersonService.delete(q);
+        }
+
+        return rq.redirectWithMsg("/likeablePerson/list", "삭제가 완료되었습니다.");
+    }
 }
