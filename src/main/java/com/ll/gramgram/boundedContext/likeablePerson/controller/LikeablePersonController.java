@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import java.security.Principal;
 import java.util.List;
 import java.util.Optional;
 
@@ -66,13 +67,31 @@ public class LikeablePersonController {
         return "usr/likeablePerson/list";
     }
 
-//    @PreAuthorize("isAuthenticated()") // 정상작동하지만 service를 도입하고싶다.
+    @PreAuthorize("isAuthenticated()")
+    @Transactional
+    @GetMapping("/delete/{id}")
+    public String LikeDelete(@PathVariable("id") Integer id,Principal principal) {
+        LikeablePerson likeablePerson = likeablePersonService.findById(id); //
+        if (likeablePerson == null) {
+            return rq.redirectWithMsg("/likeablePerson/list", RsData.of("F-1", "해당 대상이 없습니다."));
+        }
+        InstaMember fromInstaMember = likeablePerson.getFromInstaMember();
+        if (!fromInstaMember.getUsername().equals(principal.getName())) {
+            return rq.redirectWithMsg("/likeablePerson/list", RsData.of("F-2", "삭제 권한이 없는 회원입니다."));
+        }
+        likeablePersonService.delete(id);
+
+        return rq.redirectWithMsg("/likeablePerson/list", "삭제가 완료되었습니다.");
+    }
+
+
+
+//    @PreAuthorize("isAuthenticated()") // 정상작동하지만 service를 도입하고싶다. 버전 1
 //    @Transactional
 //    @GetMapping("/delete/{id}")
 //    public String LikeDelete(@PathVariable("id") Integer id) {
 //        Optional<LikeablePerson> likeablePerson = likeablePersonRepository.findById(id);
-//        if(likeablePerson.isPresent())
-//        {
+//        if (likeablePerson.isPresent()) {
 //            LikeablePerson q = likeablePerson.get();
 //            likeablePersonService.delete(q);
 //        }
@@ -80,3 +99,4 @@ public class LikeablePersonController {
 //        return rq.redirectWithMsg("/likeablePerson/list", "삭제가 완료되었습니다.");
 //    }
 }
+
