@@ -33,6 +33,12 @@ public class LikeablePersonService {
         InstaMember fromInstaMember = member.getInstaMember();
         InstaMember toInstaMember = instaMemberService.findByUsernameOrCreate(username).getData();
 
+        Optional<LikeablePerson> opToInstaMember = likeablePersonRepository.findByToInstaMember(toInstaMember);
+
+        if (opToInstaMember.isPresent()) {
+            return RsData.of("F-3", "이미 '%s'님은 호감상대로 등록되어있습니다.".formatted(username));
+        }
+
         LikeablePerson likeablePerson = LikeablePerson
                 .builder()
                 .fromInstaMember(fromInstaMember) // 호감을 표시하는 사람의 인스타 멤버
@@ -73,7 +79,7 @@ public class LikeablePersonService {
         if (likeablePerson == null) return RsData.of("F-1", "이미 삭제되었습니다.");
 
         // 수행자의 인스타계정 번호
-        long actorInstaMemberId = actor.getInstaMember().getId(); // rg.getMember().getInstaMember().getId();
+        long actorInstaMemberId = actor.getInstaMember().getId();
         // 삭제 대상의 작성자(호감표시한 사람)의 인스타계정 번호
         long fromInstaMemberId = likeablePerson.getFromInstaMember().getId();
 
