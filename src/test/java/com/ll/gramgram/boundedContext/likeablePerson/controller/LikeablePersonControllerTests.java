@@ -157,7 +157,7 @@ public class LikeablePersonControllerTests {
     }
 
     @Test
-    @DisplayName("호감삭제")
+    @DisplayName("호감취소")
     @WithUserDetails("user3")
     void t006() throws Exception {
         // WHEN
@@ -180,7 +180,7 @@ public class LikeablePersonControllerTests {
     }
 
     @Test
-    @DisplayName("호감삭제(없는거 삭제, 삭제가 안되어야 함)")
+    @DisplayName("호감취소(없는거 취소, 취소가 안되어야 함)")
     @WithUserDetails("user3")
     void t007() throws Exception {
         // WHEN
