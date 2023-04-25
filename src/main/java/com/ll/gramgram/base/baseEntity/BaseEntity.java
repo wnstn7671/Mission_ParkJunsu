@@ -22,7 +22,7 @@ import static jakarta.persistence.GenerationType.IDENTITY;
 @NoArgsConstructor
 @EntityListeners(AuditingEntityListener.class)
 @ToString
-public class BaseEntity { // 중복된 코드 제거를 위해서
+public abstract class BaseEntity { // 중복된 코드 제거를 위해서
     @Id
     @GeneratedValue(strategy = IDENTITY)
     private Long id;

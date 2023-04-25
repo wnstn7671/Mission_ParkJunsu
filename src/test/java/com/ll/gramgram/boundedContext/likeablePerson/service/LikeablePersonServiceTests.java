@@ -22,7 +22,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class LikeablePersonServiceTests {
     @Autowired
     private LikeablePersonService likeablePersonService;
-
     @Autowired
     private LikeablePersonRepository likeablePersonRepository;
 
@@ -46,6 +45,7 @@ public class LikeablePersonServiceTests {
         */
         InstaMember instaMemberInstaUser3 = likeablePersonId2.getFromInstaMember();
         assertThat(instaMemberInstaUser3.getUsername()).isEqualTo("insta_user3");
+
         // 인스타아이디가 insta_user3 인 사람이 호감을 표시한 `좋아요` 목록
         // 좋아요는 2가지로 구성되어 있다 : from(호감표시자), to(호감받은자)
         /*
@@ -197,5 +197,13 @@ public class LikeablePersonServiceTests {
         LikeablePerson likeablePerson = likeablePersonRepository.findByFromInstaMemberIdAndToInstaMember_username(2L, "insta_user100");
 
         assertThat(likeablePerson.getId()).isEqualTo(2);
+    }
+
+    @Test
+    @DisplayName("테스트 5")
+    void t005() throws Exception {
+        LikeablePerson likeablePerson = likeablePersonRepository.findQslByFromInstaMemberIdAndToInstaMember_username(2L, "insta_user4").orElse(null);
+
+        assertThat(likeablePerson.getId()).isEqualTo(1L);
     }
 }
