@@ -9,7 +9,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 public class GramgramApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(GramgramApplication.class, args);
+   SpringApplication.run(GramgramApplication.class, args);
     }
 
 }
