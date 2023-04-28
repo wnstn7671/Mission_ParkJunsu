@@ -1,4 +1,4 @@
-package com.ll.gramgram.boundedContext.instaMember.eventListener;
+package com.ll.gramgram.boundedContext.instaMember.eventListner;
 
 import com.ll.gramgram.base.event.EventAfterFromInstaMemberChangeGender;
 import com.ll.gramgram.base.event.EventAfterLike;

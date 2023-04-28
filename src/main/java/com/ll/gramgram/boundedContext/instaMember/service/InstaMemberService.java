@@ -68,7 +68,8 @@ public class InstaMemberService {
                 .map(instaMember -> RsData.of("S-2", "인스타계정이 등록되었습니다.", instaMember))
                 .orElseGet(() -> create(username, "U"));
     }
-
+    // 두번째 함수는 만일 인스타계정이 존재하면 성별만 바꿔줘서 다시 등록해주는 로직이라고 생각하는데
+    // 첫번째 함수는 매개변수가 다르고 만일 인스타멤버가 없다면 성별은 U로 생성해주는 로직인가요 ?
     @Transactional
     public RsData<InstaMember> findByUsernameOrCreate(String username, String gender) {
         Optional<InstaMember> opInstaMember = findByUsername(username);
