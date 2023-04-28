@@ -49,13 +49,19 @@ public class InstaMember extends InstaMemberBase {
     public void removeToLikeablePerson(LikeablePerson likeablePerson) {
         toLikeablePeople.removeIf(e -> e.equals(likeablePerson));
     }
-
     public String getGenderDisplayName() {
         return switch (gender) {
             case "W" -> "여성";
             default -> "남성";
         };
     }
+    public String getGenderDisplayNameWithIcon() {
+        return switch (gender) {
+            case "W" -> "<i class=\"fa-solid fa-person-dress\"></i>";
+            default -> "<i class=\"fa-solid fa-person\"></i>";
+        } + "&nbsp;" + getGenderDisplayName();
+    }
+
 
     public void increaseLikesCount(String gender, int attractiveTypeCode) {
         if (gender.equals("W") && attractiveTypeCode == 1) likesCountByGenderWomanAndAttractiveTypeCode1++;
