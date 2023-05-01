@@ -46,7 +46,7 @@ public class LikeablePerson extends BaseEntity {
 
     // 초 단위에서 올림 해주세요.
     public String getModifyUnlockDateRemainStrHuman() {
-        Duration diff = Duration.between(LocalDateTime.now().toLocalTime(),modifyUnlockDate.toLocalTime());
+        Duration diff = Duration.between(LocalDateTime.now().toLocalTime(),modifyUnlockDate.toLocalTime()); //두 시간 사이를 초(second)로 계산합니다.
         long time = diff.getSeconds();
         String second = valueOf(time);
         return second;
