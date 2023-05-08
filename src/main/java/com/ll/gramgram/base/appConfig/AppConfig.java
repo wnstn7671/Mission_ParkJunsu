@@ -19,7 +19,7 @@ public class AppConfig {
     @Getter
     private static long likeablePersonModifyCoolTime;
 
-   @Value("${custom.likeablePerson.modifyCoolTime}")
+    @Value("${custom.likeablePerson.modifyCoolTime}")
     public void setLikeablePersonModifyCoolTime(long likeablePersonModifyCoolTime) {
         AppConfig.likeablePersonModifyCoolTime = likeablePersonModifyCoolTime;
     }
@@ -28,3 +28,4 @@ public class AppConfig {
         return LocalDateTime.now().plusSeconds(likeablePersonModifyCoolTime);
     }
 }
+

@@ -26,6 +26,7 @@ public class InstaMember extends InstaMemberBase {
 
     @Setter
     private String accessToken;
+
     @OneToMany(mappedBy = "fromInstaMember", cascade = {CascadeType.ALL})
     @OrderBy("id desc") // 정렬
     @LazyCollection(LazyCollectionOption.EXTRA)
@@ -53,19 +54,20 @@ public class InstaMember extends InstaMemberBase {
     public void removeToLikeablePerson(LikeablePerson likeablePerson) {
         toLikeablePeople.removeIf(e -> e.equals(likeablePerson));
     }
+
     public String getGenderDisplayName() {
         return switch (gender) {
             case "W" -> "여성";
             default -> "남성";
         };
     }
+
     public String getGenderDisplayNameWithIcon() {
         return switch (gender) {
             case "W" -> "<i class=\"fa-solid fa-person-dress\"></i>";
             default -> "<i class=\"fa-solid fa-person\"></i>";
         } + "&nbsp;" + getGenderDisplayName();
     }
-
 
     public void increaseLikesCount(String gender, int attractiveTypeCode) {
         if (gender.equals("W") && attractiveTypeCode == 1) likesCountByGenderWomanAndAttractiveTypeCode1++;
@@ -103,6 +105,5 @@ public class InstaMember extends InstaMemberBase {
                 .likesCountByGenderWomanAndAttractiveTypeCode2(likesCountByGenderWomanAndAttractiveTypeCode2)
                 .likesCountByGenderWomanAndAttractiveTypeCode3(likesCountByGenderWomanAndAttractiveTypeCode3)
                 .build();
-
     }
 }

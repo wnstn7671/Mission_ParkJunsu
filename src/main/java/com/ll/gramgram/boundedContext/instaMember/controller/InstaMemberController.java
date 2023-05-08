@@ -34,7 +34,7 @@ public class InstaMemberController {
     @Getter
     public static class ConnectForm {
         @NotBlank
-        @Size(min = 4, max = 30)
+        @Size(min = 3, max = 30)
         private final String username;
         @NotBlank
         @Size(min = 1, max = 1)
@@ -52,6 +52,7 @@ public class InstaMemberController {
 
         return rq.redirectWithMsg("/usr/likeablePerson/like", "인스타그램 계정이 연결되었습니다.");
     }
+
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/connectByApi")
     public String showConnectByApi() {

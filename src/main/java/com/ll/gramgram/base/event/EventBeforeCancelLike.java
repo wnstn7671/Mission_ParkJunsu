@@ -12,5 +12,4 @@ public class EventBeforeCancelLike extends ApplicationEvent {
         super(source);
         this.likeablePerson = likeablePerson;
     }
-
 }

@@ -15,7 +15,6 @@ import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -46,7 +45,7 @@ public class LikeablePersonService {
                 .toInstaMember(toInstaMember) // 호감을 받는 사람의 인스타 멤버
                 .toInstaMemberUsername(toInstaMember.getUsername()) // 중요하지 않음
                 .attractiveTypeCode(attractiveTypeCode) // 1=외모, 2=능력, 3=성격
-                .modifyUnlockDate(AppConfig.genLikeablePersonModifyUnlockDate()) // LocalDateTime.now().plusSeconds(likeablePersonModifyCoolTime); 기존의 시간에 쿨타임을 더해준다.
+                .modifyUnlockDate(AppConfig.genLikeablePersonModifyUnlockDate())
                 .build();
 
         likeablePersonRepository.save(likeablePerson); // 저장
@@ -87,27 +86,20 @@ public class LikeablePersonService {
     }
 
     public RsData canCancel(Member actor, LikeablePerson likeablePerson) {
-        if (likeablePerson == null) return RsData.of("F-1", "이미 삭제되었습니다.");
-
-        // 수정가능한 시간이 현재의 시간보다 전이면 true
-        // 수정가능한 시간이 현재의 시간보다 후 면 false
-        if (!likeablePerson.isModifyUnlocked()) {
-            String second = likeablePerson.getModifyUnlockDateRemainStrHuman();
-            return RsData.of("F-3", "%s초 후에 삭제할 수 있습니다.".formatted(second));
-        }
+        if (likeablePerson == null) return RsData.of("F-1", "이미 취소되었습니다.");
 
         // 수행자의 인스타계정 번호
-
-         // 수행자의 인스타계정 번호
-
         long actorInstaMemberId = actor.getInstaMember().getId();
         // 삭제 대상의 작성자(호감표시한 사람)의 인스타계정 번호
         long fromInstaMemberId = likeablePerson.getFromInstaMember().getId();
 
         if (actorInstaMemberId != fromInstaMemberId)
-            return RsData.of("F-2", "권한이 없습니다.");
+            return RsData.of("F-2", "취소할 권한이 없습니다.");
 
-        return RsData.of("S-1", "삭제가능합니다.");
+        if (!likeablePerson.isModifyUnlocked())
+            return RsData.of("F-3", "아직 취소할 수 없습니다. %s에는 가능합니다.".formatted(likeablePerson.getModifyUnlockDateRemainStrHuman()));
+
+        return RsData.of("S-1", "취소가 가능합니다.");
     }
 
     private RsData canLike(Member actor, String username, int attractiveTypeCode) {
@@ -167,7 +159,7 @@ public class LikeablePersonService {
 
     @Transactional
     public RsData<LikeablePerson> modifyAttractive(Member actor, LikeablePerson likeablePerson, int attractiveTypeCode) {
-        RsData canModifyRsData = canModifyLike(actor, likeablePerson);
+        RsData canModifyRsData = canModify(actor, likeablePerson);
 
         if (canModifyRsData.isFail()) {
             return canModifyRsData;
@@ -183,7 +175,8 @@ public class LikeablePersonService {
         return RsData.of("S-3", "%s님에 대한 호감사유를 %s에서 %s(으)로 변경합니다.".formatted(username, oldAttractiveTypeDisplayName, newAttractiveTypeDisplayName), likeablePerson);
     }
 
-    private RsData<LikeablePerson> modifyAttractive(Member actor, String username, int attractiveTypeCode) {
+    @Transactional
+    public RsData<LikeablePerson> modifyAttractive(Member actor, String username, int attractiveTypeCode) {
         // 액터가 생성한 `좋아요` 들 가져오기
         List<LikeablePerson> fromLikeablePeople = actor.getInstaMember().getFromLikeablePeople();
 
@@ -209,22 +202,21 @@ public class LikeablePersonService {
         }
     }
 
-    public RsData canModifyLike(Member actor, LikeablePerson likeablePerson) {
+    public RsData canModify(Member actor, LikeablePerson likeablePerson) {
         if (!actor.hasConnectedInstaMember()) {
             return RsData.of("F-1", "먼저 본인의 인스타그램 아이디를 입력해주세요.");
-        }
-        if (!likeablePerson.isModifyUnlocked()) {
-            String second = likeablePerson.getModifyUnlockDateRemainStrHuman();
-            return RsData.of("F-3", "%s초 후에 수정할 수 있습니다.".formatted(second));
         }
 
         InstaMember fromInstaMember = actor.getInstaMember();
 
         if (!Objects.equals(likeablePerson.getFromInstaMember().getId(), fromInstaMember.getId())) {
-            return RsData.of("F-2", "해당 호감표시를 취소할 권한이 없습니다.");
+            return RsData.of("F-2", "해당 호감표시에 대해서 사유변경을 수행할 권한이 없습니다.");
         }
 
+        if (!likeablePerson.isModifyUnlocked())
+            return RsData.of("F-3", "아직 호감사유변경을 할 수 없습니다. %s에는 가능합니다.".formatted(likeablePerson.getModifyUnlockDateRemainStrHuman()));
 
-        return RsData.of("S-1", "호감표시취소가 가능합니다.");
+
+        return RsData.of("S-1", "호감사유변경이 가능합니다.");
     }
 }
