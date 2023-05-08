@@ -3,6 +3,7 @@ package com.ll.gramgram.boundedContext.likeablePerson.repository;
 import com.ll.gramgram.boundedContext.likeablePerson.entity.LikeablePerson;
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -14,4 +15,5 @@ public interface LikeablePersonRepository extends JpaRepository<LikeablePerson, 
     LikeablePerson findByFromInstaMemberIdAndToInstaMember_username(long fromInstaMemberId, String username);
 
     Optional<LikeablePerson> findByFromInstaMember_usernameAndToInstaMember_username(String fromInstaMemberUsername, String toInstaMemberUsername);
+
 }
