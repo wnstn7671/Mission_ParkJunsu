@@ -95,7 +95,11 @@ public class LikeablePersonService {
             String second = likeablePerson.getModifyUnlockDateRemainStrHuman();
             return RsData.of("F-3", "%s초 후에 삭제할 수 있습니다.".formatted(second));
         }
+
+        // 수행자의 인스타계정 번호
+
          // 수행자의 인스타계정 번호
+
         long actorInstaMemberId = actor.getInstaMember().getId();
         // 삭제 대상의 작성자(호감표시한 사람)의 인스타계정 번호
         long fromInstaMemberId = likeablePerson.getFromInstaMember().getId();
@@ -160,6 +164,7 @@ public class LikeablePersonService {
 
         return modifyAttractive(actor, likeablePerson, attractiveTypeCode);
     }
+
     @Transactional
     public RsData<LikeablePerson> modifyAttractive(Member actor, LikeablePerson likeablePerson, int attractiveTypeCode) {
         RsData canModifyRsData = canModifyLike(actor, likeablePerson);
