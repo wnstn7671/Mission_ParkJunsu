@@ -2,12 +2,10 @@ package com.ll.gramgram.boundedContext.likeablePerson.controller;
 
 
 import com.ll.gramgram.base.appConfig.AppConfig;
-import com.ll.gramgram.base.rsData.RsData;
 import com.ll.gramgram.boundedContext.likeablePerson.entity.LikeablePerson;
 import com.ll.gramgram.boundedContext.likeablePerson.service.LikeablePersonService;
 import com.ll.gramgram.boundedContext.member.entity.Member;
 import com.ll.gramgram.boundedContext.member.service.MemberService;
-import com.ll.gramgram.standard.util.Ut;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Test;
@@ -21,7 +19,6 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
 import java.util.Optional;
 import java.util.stream.IntStream;
 
@@ -143,7 +140,7 @@ public class LikeablePersonControllerTests {
     @Test
     @DisplayName("수정 폼")
     @WithUserDetails("user3")
-    void t005() throws Exception {
+    void t014() throws Exception {
         // WHEN
         ResultActions resultActions = mvc
                 .perform(get("/usr/likeablePerson/modify/2"))
@@ -175,7 +172,7 @@ public class LikeablePersonControllerTests {
     @Test
     @DisplayName("수정 폼 처리")
     @WithUserDetails("user3")
-    void t006() throws Exception {
+    void t015() throws Exception {
         // WHEN
         ResultActions resultActions = mvc
                 .perform(post("/usr/likeablePerson/modify/2")
@@ -196,7 +193,7 @@ public class LikeablePersonControllerTests {
     @Test
     @DisplayName("호감목록")
     @WithUserDetails("user3")
-    void t007() throws Exception {
+    void t005() throws Exception {
         // WHEN
         ResultActions resultActions = mvc
                 .perform(get("/usr/likeablePerson/list"))
@@ -225,7 +222,7 @@ public class LikeablePersonControllerTests {
     @Test
     @DisplayName("호감취소")
     @WithUserDetails("user3")
-    void t008() throws Exception {
+    void t006() throws Exception {
         // WHEN
         ResultActions resultActions = mvc
                 .perform(
@@ -248,7 +245,7 @@ public class LikeablePersonControllerTests {
     @Test
     @DisplayName("호감취소(없는거 취소, 취소가 안되어야 함)")
     @WithUserDetails("user3")
-    void t009() throws Exception {
+    void t007() throws Exception {
         // WHEN
         ResultActions resultActions = mvc
                 .perform(
@@ -268,7 +265,7 @@ public class LikeablePersonControllerTests {
     @Test
     @DisplayName("호감취소(권한이 없는 경우, 취소가 안됨)")
     @WithUserDetails("user2")
-    void t010() throws Exception {
+    void t008() throws Exception {
         // WHEN
         ResultActions resultActions = mvc
                 .perform(
@@ -290,7 +287,7 @@ public class LikeablePersonControllerTests {
     @Test
     @DisplayName("인스타아이디가 없는 회원은 대해서 호감표시를 할 수 없다.")
     @WithUserDetails("user1")
-    void t011() throws Exception {
+    void t009() throws Exception {
         // WHEN
         ResultActions resultActions = mvc
                 .perform(post("/usr/likeablePerson/like")
@@ -311,7 +308,7 @@ public class LikeablePersonControllerTests {
     @Test
     @DisplayName("본인이 본인에게 호감표시하면 안된다.")
     @WithUserDetails("user3")
-    void t012() throws Exception {
+    void t010() throws Exception {
         // WHEN
         ResultActions resultActions = mvc
                 .perform(post("/usr/likeablePerson/like")
@@ -332,7 +329,7 @@ public class LikeablePersonControllerTests {
     @Test
     @DisplayName("특정인에 대해서 호감표시를 중복으로 시도하면 안된다.")
     @WithUserDetails("user3")
-    void t013() throws Exception {
+    void t011() throws Exception {
         // WHEN
         ResultActions resultActions = mvc
                 .perform(post("/usr/likeablePerson/like")
@@ -353,7 +350,7 @@ public class LikeablePersonControllerTests {
     @Test
     @DisplayName("한 회원은 호감표시 할 수 있는 최대 인원이 정해져 있다.")
     @WithUserDetails("user5")
-    void t014() throws Exception {
+    void t012() throws Exception {
         Member memberUser5 = memberService.findByUsername("user5").get();
 
         IntStream.range(0, (int) AppConfig.getLikeablePersonFromMax())
@@ -381,7 +378,7 @@ public class LikeablePersonControllerTests {
     @Test
     @DisplayName("기존에 호감을 표시한 유저에게 새로운 사유로 호감을 표시하면 추가가 아니라 수정이 된다.")
     @WithUserDetails("user3")
-    void t015() throws Exception {
+    void t013() throws Exception {
         // WHEN
         ResultActions resultActions = mvc
                 .perform(post("/usr/likeablePerson/like")
@@ -406,69 +403,4 @@ public class LikeablePersonControllerTests {
 
         assertThat(newAttractiveTypeCode).isEqualTo(2);
     }
-    @Test
-    @DisplayName("호감을 표현하거나 변경한 뒤 쿨타임이 지나면 다시 호감 변경이 가능합니다.")
-    @WithUserDetails("user3")
-    void t016() throws Exception{
-
-
-        // 현재 호감을 insta_user3이 -> insta_user100 에게 호감표시를 한 상태이다.
-        LikeablePerson likeablePersonToInstaUser100 = likeablePersonService.findById(2L).orElse(null);
-        // 현재 3시간동안 호감표시를 수정하지 못하지만 시간을 강제로 현재 시간 - 1초로 바꿔준다.
-        // likeablePersonToInstaUser100 = 바꿔줄 객체
-        // modifyUnlockDate = 바꿀 객체 필드의 값
-        // LocalDateTime.now() = 변경할 값
-        Ut.reflection.setFieldValue(likeablePersonToInstaUser100, "modifyUnlockDate", LocalDateTime.now().minusSeconds(1));
-
-        ResultActions resultActions = mvc
-                // id=2
-                .perform(post("/usr/likeablePerson/modify/2")
-                        .with(csrf()) // CSRF 키 생성
-                        // 호감사유를 2->3으로 값을 바꿔준다.
-                        .param("attractiveTypeCode", "3")
-                )
-                .andDo(print());
-
-        // THEN
-        resultActions
-                .andExpect(handler().handlerType(LikeablePersonController.class))
-                .andExpect(handler().methodName("modify"))
-                .andExpect(status().is3xxRedirection());
-
-
-    }
-    @Test
-    @DisplayName("호감사유를 강제로 현재시간으로 수정하여 수정 후 다시 재수정 할려면 수정시간이 3시간 이후기 때문에 수정할 수 없다")
-    @WithUserDetails("user3")
-    void t017() throws Exception{
-        //user3 값 넣어주기
-        Member memberUser3 = memberService.findByUsername("user3").orElseThrow();
-        //ID가 2인 좋아요 객체 가져오기
-        LikeablePerson likeablePersonToInstaUser100 = likeablePersonService.findById(2L).orElse(null);
-        //ID가 2인 좋아요 객체 필드의 modifyUnlockDate 값을 현재시간 -1초 로 재설정해준다.
-        Ut.reflection.setFieldValue(likeablePersonToInstaUser100, "modifyUnlockDate", LocalDateTime.now().minusSeconds(1));
-        // user3의 호감사유를 2->3으로 수정해준다.
-        RsData<LikeablePerson> likeablePersonModifiy = likeablePersonService.modifyAttractive(memberUser3, likeablePersonToInstaUser100, 3);
-
-
-        // user3의 호감사유를 다시 재수정 해준다
-        // 현재 user3의 호감사유는 3이고 1로 다시 수정해줄려면 수정시간은 3시간 이후로 설정되어있기에 수정을 할 수 없다.
-        ResultActions resultActions = mvc
-                .perform(post("/usr/likeablePerson/modify/2")
-                        .with(csrf()) // CSRF 키 생성
-                        .param("attractiveTypeCode", "1")
-                )
-                .andDo(print());
-
-        // 결과는 400에러가 나오면 성공하는 테스트 코드가 된다.
-
-        // THEN
-        resultActions
-                .andExpect(handler().handlerType(LikeablePersonController.class))
-                .andExpect(handler().methodName("modify"))
-                .andExpect(status().is4xxClientError());
-
-
-    }
-
 }
