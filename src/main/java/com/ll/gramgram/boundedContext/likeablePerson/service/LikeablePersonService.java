@@ -64,6 +64,10 @@ public class LikeablePersonService {
     public List<LikeablePerson> findByFromInstaMemberId(Long fromInstaMemberId) {
         return likeablePersonRepository.findByFromInstaMemberId(fromInstaMemberId);
     }
+//    public List<LikeablePerson> findByGender(String gender)
+//    {
+//        return likeablePersonRepository.findByGender(gender);
+//    }
 
     public Optional<LikeablePerson> findById(Long id) {
         return likeablePersonRepository.findById(id);
@@ -218,5 +222,8 @@ public class LikeablePersonService {
 
 
         return RsData.of("S-1", "호감사유변경이 가능합니다.");
+    }
+
+    public void findByGender() {
     }
 }
