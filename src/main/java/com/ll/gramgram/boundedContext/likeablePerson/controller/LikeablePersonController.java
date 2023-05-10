@@ -151,11 +151,11 @@ public class LikeablePersonController {
                 case 2:
                      likeablePeopleStream = likeablePeopleStream.sorted(Comparator.comparing(LikeablePerson::getCreateDate)); // 오래된 순 정렬
                     break;
-                case 3: // instaMember에 있는 getLikes를 가져와야하는데 방법이 어떻게 될까아 리스트에 있는 각각의 객체에서 getLikes를 가져온다
-                     likeablePeopleStream = likeablePeopleStream.sorted(Comparator.comparingLong(likes -> ((LikeablePerson) likes).getFromInstaMember().getLikes()).reversed());
+                case 3:
+                     likeablePeopleStream = likeablePeopleStream.sorted(Comparator.comparingLong(likes -> ((LikeablePerson) likes).getFromInstaMember().getLikes()).reversed()); // 인기 많은순 정렬
                     break;
                 case 4:
-                     likeablePeopleStream = likeablePeopleStream.sorted(Comparator.comparingLong(likes -> likes.getFromInstaMember().getLikes()));
+                     likeablePeopleStream = likeablePeopleStream.sorted(Comparator.comparingLong(likes -> likes.getFromInstaMember().getLikes())); // 인기 적은 순 정렬
                     break;
 //                case 5:
 //                    break;
@@ -168,17 +168,7 @@ public class LikeablePersonController {
             model.addAttribute("likeablePeople", likeablePeople);
         }
 
-//Integer[] arr = {1, 26, 17, 25, 99, 44, 303};
-
-
-
-
-
-
-
-
-
-        return "usr/likeablePerson/toList";
+     return "usr/likeablePerson/toList";
     }
 
 }
