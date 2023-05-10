@@ -133,9 +133,8 @@ public class LikeablePersonController {
         // 인스타인증을 했는지 체크
         if (instaMember != null) {
             // 해당 인스타회원이 좋아하는 사람들 목록
-
-
             Stream<LikeablePerson> likeablePeopleStream = instaMember.getToLikeablePeople().stream();
+
                 if (gender != null && !gender.isEmpty()) {
                     likeablePeopleStream = likeablePeopleStream
                             .filter(l -> l.getFromInstaMember().getGender().equalsIgnoreCase(gender));
@@ -145,11 +144,41 @@ public class LikeablePersonController {
                     likeablePeopleStream=likeablePeopleStream
                             .filter(l->l.getAttractiveTypeCode()==attractiveTypeCode);
                 }
+            switch (sortCode) {
+                case 1:
+                     likeablePeopleStream = likeablePeopleStream.sorted(Comparator.comparing(LikeablePerson::getCreateDate).reversed()); // 최신순 정렬
+                    break;
+                case 2:
+                     likeablePeopleStream = likeablePeopleStream.sorted(Comparator.comparing(LikeablePerson::getCreateDate)); // 오래된 순 정렬
+                    break;                                                                     //InstaMember::getLikes
+                case 3: // instaMember에 있는 getLikes를 가져와야하는데 방법이 어떻게 될까아 리스트에 있는 각각의 객체에서 getLikes를 가져온다
+                     likeablePeopleStream = likeablePeopleStream.sorted(Comparator.comparingLong(likes -> ((LikeablePerson) likes).getFromInstaMember().getLikes()).reversed());
+                    break;
+                case 4:
+                     likeablePeopleStream = likeablePeopleStream.sorted(Comparator.comparingLong(likes -> likes.getFromInstaMember().getLikes()));
+                    break;
+//                case 5:
+//                    break;
+//                case 6:
+//                     likeablePeopleStream = likeablePeopleStream.sorted(??);
+//                    break;
 
+            }
             List<LikeablePerson> likeablePeople = likeablePeopleStream.collect(Collectors.toList());
             model.addAttribute("likeablePeople", likeablePeople);
         }
- return "usr/likeablePerson/toList";
+
+//Integer[] arr = {1, 26, 17, 25, 99, 44, 303};
+
+
+
+
+
+
+
+
+
+        return "usr/likeablePerson/toList";
     }
 
 }

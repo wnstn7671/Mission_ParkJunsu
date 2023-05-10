@@ -64,10 +64,7 @@ public class LikeablePersonService {
     public List<LikeablePerson> findByFromInstaMemberId(Long fromInstaMemberId) {
         return likeablePersonRepository.findByFromInstaMemberId(fromInstaMemberId);
     }
-//    public List<LikeablePerson> findByGender(String gender)
-//    {
-//        return likeablePersonRepository.findByGender(gender);
-//    }
+
 
     public Optional<LikeablePerson> findById(Long id) {
         return likeablePersonRepository.findById(id);

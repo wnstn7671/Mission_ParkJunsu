@@ -44,7 +44,7 @@ public abstract class InstaMemberBase extends BaseEntity {
         return likesCountByGenderWomanAndAttractiveTypeCode3 + likesCountByGenderManAndAttractiveTypeCode3;
     }
 
-    public Long getLikes() {
+    public long getLikes() {
         return getLikesCountByGenderWoman() + getLikesCountByGenderMan();
     }
 }
