@@ -134,7 +134,6 @@ public class LikeablePersonController {
         if (instaMember != null) {
             List<LikeablePerson> likeablePeople = likeablePersonService.findByToInstaMember(instaMember, gender, attractiveTypeCode, sortCode);
 
-
             model.addAttribute("likeablePeople", likeablePeople);
 
         }
