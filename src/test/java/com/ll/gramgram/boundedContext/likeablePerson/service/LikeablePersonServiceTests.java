@@ -337,7 +337,7 @@ public class LikeablePersonServiceTests {
         assertThat(likeablePeople)
                 .isSortedAccordingTo(
                         Comparator.comparing(LikeablePerson::getAttractiveTypeCode)
-                                .thenComparing(Comparator.comparing(LikeablePerson::getCreateDate).reversed())
+                                .thenComparing(Comparator.comparing(LikeablePerson::getCreateDate).reversed()) // 4주차 미션 끝
                 );
     }
 }
